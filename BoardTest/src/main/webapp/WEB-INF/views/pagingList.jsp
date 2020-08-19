@@ -13,46 +13,47 @@
 
 <th>글번호</th>
 <th>작성자</th>
-<th>비밀번호</th>
 <th>제목</th>
-<th>내용</th>
 <th>날짜</th>
 <th>조회수</th>
-<th>첨부파일</th>
-<th>파일이름</th>
-<td></td>
+<!-- <th>사진</th> -->
+<th>상세보기</th>
+<th>삭제하기</th>
+
+
 
 </tr>
 
-<c:forEach var="board" items="${List}">
+<c:forEach var="board" items="${paginglist}">
 	<tr>
-		<td>${board.bNum}</td>
-		<td>${board.bWriter}</td>
-		<td>${board.bPassword}</td>
-		<td>${board.bTitle}</td>
-		<td>${board.bContents}</td>
-		<td>${board.bDate}</td>
-		<td>${board.bHit}</td>
-		<td>${board.bFile}</td>
-		<td>${board.bFileName}</td>
+		<td>${board.bnum}</td>
+		<td>${board.bwriter}</td>
+		<td>${board.btitle}</td>
+		<td>${board.bdate}</td>
+		<td>${board.bhit}</td>
+		<%-- <td><img src="resources/fileUpload/${board.bfilename}"/></td> --%>
+		<td><a href="boardView?bnum=${board.bnum}&page=${paging.page}">상세보기</a></td>
+		<td><a href="boardDelete?bnum=${board.bnum}&page=${paging.page}">삭제</a></td>
+		
 	</tr>
 </c:forEach>
 
-<c:if test="${paging.page>=1}">
-<a href="pagingList?page${paging.startpage}">[맨앞]</a>
-</c:if>
+
+</table>
+<!-- 페이징 처리 -->
+<%-- <c:if test="${paging.page<=1}">
+<a href="pagingList?page=${paging.startpage}">[맨앞]</a>&nbsp;</c:if>
+ --%>
 <c:if test="${paging.page<=1}">[이전]&nbsp;</c:if>
 	<c:if test="${paging.page>1}">
-		<a href="pagingList?page=${paging.page-1}">[이전]</a>
-	</c:if>
+		<a href="pagingList?page=${paging.page-1}">[이전]</a>&nbsp;</c:if>
 
-	<c:forEach begin="${paging.startpage}" end="${paging.endpage }" var="i"
-		step="1">
-			
+	<c:forEach begin="${paging.startpage}" end="${paging.endpage}" var="i" step="1">
 		<c:choose>
 			<c:when test="${i eq paging.page}">
 				${i}
 			</c:when>
+			
 			<c:otherwise>
 				<a href="pagingList?page=${i}">${i}</a>
 			</c:otherwise>
@@ -62,13 +63,9 @@
 
 	<c:if test="${paging.page>=paging.maxpage}">[다음]</c:if>
 	<c:if test="${paging.page<paging.maxpage}">
-		<a href="pagingList?page=${paging.page+1}">[다음]</a>
-	</c:if>
+		<a href="pagingList?page=${paging.page+1}">[다음]</a>&nbsp;</c:if>
 
-	 <c:if test="${paging.page<=paging.maxpage}">
-	 <a href="pagingList?page=${paging.endpage}">[맨뒤]</a>
-	 </c:if>
-
-</table>
+	 <%-- <c:if test="${paging.page<=paging.maxpage}">
+	 <a href="pagingList?page=${paging.endpage}">[맨뒤]</a>&nbsp;</c:if> --%>
 </body>
 </html>

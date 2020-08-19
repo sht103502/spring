@@ -8,5 +8,21 @@
 		VALUES(BNUM_SEQ.nextval, #{bwriter}, #{bpassword}, #{btitle}, #{bcontents}, SYSDATE, 0, #{bfilename})
  	
  	</insert>
- 
+ 	
+ 	<select id="boardList" resultType="board">
+ 		SELECT*FROM BOARDTEST
+ 	</select>
+ 	
+ 	<select id="listCount" resultType="int">
+ 		SELECT COUNT(*) FROM BOARDTEST
+ 	</select>
+ 	
+ 	<!-- 페이징 처리 -->
+ 	<select id ="pagingList" parameterType="paging" resultType="board">
+ 		SELECT * FROM BOARDLISTT WHERE RN BETWEEN #{startrow} AND #{endrow}
+ 	</select>
+ 	
+ 	<select id="boardView"  parameterType="int" resultType="board">
+ 		SELECT * FROM BOARDTEST WHERE BNUM = #{bnum}
+ 	</select>
  </mapper>
