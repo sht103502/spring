@@ -61,13 +61,43 @@ public class BoardController {
 		return mav;
 	}
 	
+	//게시글 조회
 	@RequestMapping(value="/boardView")
 	private ModelAndView boardView(@RequestParam(value="bnum")int bnum,@RequestParam(value="page",required=false, defaultValue="1") int page) {
 		//System.out.println("bnum :"+bnum);
 		//System.out.println("page :"+page);
 		mav=bdsvc.boardView(bnum, page);
+		bdsvc.boardHit(bnum);
 	
 		return mav;
 	
+	}
+	
+	//게시글 삭제
+	@RequestMapping(value="/boardDelete")
+	private ModelAndView boardDelete(@RequestParam(value="bnum") int bnum, @RequestParam(value="page",required=false, defaultValue="1") int page) {
+		mav = bdsvc.boardDelete(bnum,page);
+		return mav;
+	}
+	
+	//게시글 수정페이지 이동
+	@RequestMapping(value="/boardModify")
+	private ModelAndView boardModify(@RequestParam(value="bnum") int bnum , @RequestParam(value="page",required=false, defaultValue="1") int page) {
+	mav=bdsvc.boardModify(bnum, page);
+	return mav;
+	}
+	
+	//게시글 수정하기
+	@RequestMapping(value="/modifyProcess")
+	private ModelAndView modifyProcess(@ModelAttribute BoardDTO board, @RequestParam(value="page",required=false, defaultValue="1") int page) throws IllegalStateException, IOException {
+		mav=bdsvc.modifyProcess(board, page);
+		return mav;
+	}
+	
+	//게시글 검색
+	@RequestMapping(value ="/boardSearch")
+	private ModelAndView boardSearch(@RequestParam(value="type")String type, @RequestParam(value="keyword") String keyword) {
+		mav = bdsvc.boardSearch(type, keyword);
+		return mav;
 	}
 }

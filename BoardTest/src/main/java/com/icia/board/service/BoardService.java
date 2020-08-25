@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.icia.board.dao.BoardDAO;
+import com.icia.board.dao.CommentDAO;
 import com.icia.board.dto.BoardDTO;
+import com.icia.board.dto.CommentDTO;
 import com.icia.board.dto.PageDTO;
 
 @Service
@@ -20,6 +22,8 @@ public class BoardService {
 	
 	@Autowired
 	private BoardDAO bdao;
+	@Autowired
+	private CommentDAO cdao;
 	
 	// 게시판 글쓰기
 	public ModelAndView boardWriteFile(BoardDTO board) throws IllegalStateException, IOException {
@@ -99,13 +103,94 @@ public class BoardService {
 			
 			return mav;
 		}
+	
+	//게시글조회
 	public ModelAndView boardView(int bnum, int page) {
+		//조회수 증가
+		bdao.boardHit(bnum);
+		
+		//상세보기
 		BoardDTO boardView =bdao.boardView(bnum);
-		System.out.println(boardView);
+//		새로추가 
+		List<CommentDTO> commentList = cdao.commentList(bnum);
+		
+		mav.addObject("commentList", commentList);
 		mav.addObject("boardView", boardView);
 		mav.addObject("page",page);
 		mav.setViewName("boardView");
 		return mav;
 	}
+	
+	
+	public ModelAndView boardDelete(int bnum, int page) {
+//		bnum만 가져가지고 넘어간다.
+		int delResult =bdao.boardDelete(bnum);
+		if(delResult >0) {
+			mav.setViewName("redirect:/pagingList?page="+page);
+		}else {
+			mav.setViewName("index");
+		}
+		return mav;
+	}
+	
+	//조회수 증가
+	public void boardHit(int bnum) {
+		bdao.boardHit(bnum);		
+	}
+	//수정페이지 이동!
+	public ModelAndView boardModify(int bnum, int page) {
+		//BoardDTO boardModify = bdao.boardModify(bnum);
+		BoardDTO boardModify =bdao.boardView(bnum);
+		
+		mav.addObject("page",page);
+		mav.addObject("boardModify",boardModify);
+		mav.setViewName("boardModify");
+		
+		
+		return mav;
+	}
+	
+	public ModelAndView modifyProcess(BoardDTO board, int page) throws IllegalStateException, IOException {
+		MultipartFile bFile = board.getBfile();
+		//실제로 업로드 된 파일 
+		
+		
+		String fileName = bFile.getOriginalFilename();
+		//업로드 된 파일의 이름 
+		//우리는 파일의 이름만 데이터베이스로 가져갈것이다.
+		
+		String savePath = "C:/Users/1/Documents/workspace-spring-tool-suite-4-4.7.1.RELEASE/BoardTest/src/main/webapp/resources/fileUpload/" + fileName;
+		
+		
+		//파일이 업로드 될경우 (첨부파일 선택 할 경우)
+		if(!bFile.isEmpty()) {
+			bFile.transferTo(new File(savePath));
+		}
+		System.out.println("=========================확인 1=========================");
+		System.out.println(board);
+		
+		board.setBfilename(fileName);
+		System.out.println("=========================확인 2=========================");
+		System.out.println(board);
+		
+		int modifyResult =bdao.modifyProcess(board);
+		
+		if(modifyResult>0) {
+			mav.addObject("page",page);
+			mav.setViewName("redirect:/boardView?bnum="+board.getBnum());
+			
+		}else {
+			mav.setViewName("paginList?page="+page);
+		}
+		return mav;
+	}
+	public ModelAndView boardSearch(String type, String keyword) {
+		List<BoardDTO> searchList = bdao.boardSearch(type, keyword);
+		
+		mav.addObject("paginglist",searchList);
+		mav.setViewName("pagingList");
+		return mav;
+	}
+	
 }
 
