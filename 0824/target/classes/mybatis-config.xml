@@ -6,6 +6,6 @@
 		<typeAlias type="com.icia.tae.dto.BoardDTO" alias="board"/>
 		<typeAlias type="com.icia.tae.dto.PageDTO" alias="paging"/>
 		<typeAlias type="com.icia.tae.dto.MemberDTO" alias="member"/>
-		
+		<typeAlias type="com.icia.tae.dto.CommentDTO" alias="comment"/>
 	</typeAliases>
 </configuration>

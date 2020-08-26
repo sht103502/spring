@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.icia.tae.dao.CommentDAO;
+import com.icia.tae.dto.CommentDTO;
 import com.icia.tae.dao.BoardDAO;
 import com.icia.tae.dto.BoardDTO;
 
@@ -21,6 +23,10 @@ public class BoardService {
 	
 	@Autowired
 	private BoardDAO bdao;
+	
+	 @Autowired
+	 private CommentDAO cdao;
+	 
 	
 	// 게시판 글쓰기
 	public ModelAndView boardWriteFile(BoardDTO board) throws IllegalStateException, IOException {
@@ -108,7 +114,8 @@ public class BoardService {
 		
 		//상세보기
 		BoardDTO boardView =bdao.boardView(bnum);
-		
+//		새로추가 
+		List<CommentDTO> commentList = cdao.commentList(bnum);
 		System.out.println(boardView);
 		mav.addObject("boardView", boardView);
 		mav.addObject("page",page);
